@@ -35,10 +35,10 @@
 			},
 			formatFormList(){
 				const {renderFormList,isGroup}=this;
-				if(!isGroup){
+				if(isGroup){
 					// 零售订单
 					const scan = renderFormList.filter(item => item.key === 'scan')[0];
-					scan.isHide=false;
+					scan.isHide=true;
 					this.renderFormList = Object.assign([], renderFormList);
 				}
 			},

@@ -1,5 +1,5 @@
 import scanIcon from '@/images/main/order/scan.png'
-
+import { validPhone,validSpecialKey } from '@/utils/reg'
 /**
 	获取新增订单表单渲染列表
 	@param {String} link 链接
@@ -58,7 +58,8 @@ export const getAddOrderFormRenderList = ()=> {
 			required: true,
 			propsData: {
 				placeholder: "请输入实付金额",
-				inputType: 'digit',
+				inputType: 'float',
+				decimalLen:2,
 			}
 		},
 		{
@@ -68,16 +69,29 @@ export const getAddOrderFormRenderList = ()=> {
 			required: true,
 			propsData: {
 				placeholder: "请输入收货人名称"
-			}
+			},
+			validFnc: (value)=>{
+				if(!validSpecialKey(value)){
+					return '买家姓名不能包含特殊字符';
+				}
+			},
 		},
 		{
 			label: "联系电话",
 			key: "receivePhone",
 			type: "input",
+			required: true,
 			propsData: {
 				placeholder: "请输入联系电话",
 				inputType: 'number',
-			}
+				maxlength: 11,
+			},
+			validFnc: (value)=>{
+				if(!validPhone(value)){
+					return '请输入正确格式联系电话';
+				}
+			},
+			
 		},
 		{
 			label: "收货地址",
@@ -126,12 +140,11 @@ export const getAddOrderFormRenderList = ()=> {
 			label: "扫码出库",
 			key: "scan",
 			type: "cell",
-			// required: true,
 			propsData: {
 				placeholder: "请扫描出库码",
 				suffixIcon: scanIcon,
 			},
-			isHide:true,
+			isHide:false,
 		},
 	]
 }
@@ -142,15 +155,19 @@ export const getAddOrderFormRenderList = ()=> {
   */
 const getAddress=(address)=>{
 	// 收货地址
-	const {province,city,district={}}=address;
-	const newAddress={
-		receiveAddress:address.address,
-		receiveProvince:province.code,
-		receiveCity:city.code,
-		receiveDistrict:district.code || city.code,
+	if(address){
+		const {province,city,district={}}=address;
+		const newAddress={
+			receiveAddress:address.address,
+			receiveProvince:province.code,
+			receiveCity:city.code,
+			receiveDistrict:district.code || city.code,
+		}
+		
+		return newAddress
 	}
 	
-	return newAddress
+	return ''
 }
 
 /**

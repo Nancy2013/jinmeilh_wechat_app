@@ -2,6 +2,7 @@
 	<view class="scanResult">
 		<view class="scanResult-title">
 			<text class="scanResult-title-text">{{title}}</text>
+			<text v-if="required" class="required">*</text>
 		</view>
 		<view class="scanResult-list">
 			<view class="scanResult-item" v-for="(codeItem, codeKey) in list" :key="codeKey">
@@ -28,6 +29,10 @@
 				default: () => {
 					return []
 				}
+			},
+			required: {
+				type: Boolean,
+				default: false,
 			}
 		},
 		data() {
@@ -62,6 +67,9 @@
 
 		.scanResult-title-text {
 			font-size: 32rpx;
+		}
+		.required{
+			color: $uni-color-error;
 		}
 	}
 

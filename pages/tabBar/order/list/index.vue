@@ -34,10 +34,18 @@
 				}
 			},
 		},
-		mounted() {
-			console.log('-----orderList-----',service);
+		mounted() {},
+		onLoad(option) {
+		    console.info('------onLoad------',option)
 		},
-		methods: {}
+		onShow(){
+			console.log('-----onShow----');
+		},
+		methods: {
+			refresh(){
+				console.log('----refresh----');
+			},
+		}
 	}
 </script>
 

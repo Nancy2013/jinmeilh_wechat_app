@@ -41,15 +41,7 @@
 					'receivePhone':'',
 					'address':'receiveAddress',
 				};
-				const {
-					renderFormList,
-					isGroup
-				} = this;
-				if (!isGroup) {
-					// 零售订单
-					const scan = renderFormList.filter(item => item.key === 'scan')[0];
-					scan.isHide = false;
-				}
+				const {renderFormList} = this;
 				Object.keys(cellKeys).forEach(key=>{
 					const current = renderFormList.filter(item=>item.key ===key)[0];
 					if(current){

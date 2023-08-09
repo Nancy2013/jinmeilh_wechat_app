@@ -2,7 +2,7 @@
 	<view class="list">
 		<scroll-view scroll-y="true" lower-threshold="30" @scrolltolower="scrollLower">
 			<slot></slot>
-			<view class="loadmore">
+			<view class="loadmore" v-if='loaded'>
 				<u-loadmore :status="status" />
 			</view>
 		</scroll-view>
@@ -59,8 +59,6 @@
 	.list{
 		height: 100%;
 		overflow-y: auto;
-		.loadmore{
-			// margin:50rpx 0;
-		}
+		.loadmore{}
 	}
 </style>

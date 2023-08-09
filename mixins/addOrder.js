@@ -26,7 +26,7 @@ export default which => ({
 				orderType: this.isGroup ? orderTypes.group : orderTypes.retail,
 				goodsPrice: 99,
 			},
-			idisCodes: ['88.555.22565/sdh20230808100000033'],
+			idisCodes: [],
 			indexList: [],
 			templateList: [],
 			batchList: [],
@@ -86,18 +86,18 @@ export default which => ({
 			const {
 				idisCodes
 			} = this;
-			// if (!parseInt(goodsQuantity)) {
-			// 	uni.$u.toast('请先输入购买数量');
-			// 	return;
-			// }
+			if (!parseInt(goodsQuantity)) {
+				uni.$u.toast('请先输入购买数量');
+				return;
+			}
 			if (!recordId) {
 				uni.$u.toast('请先选择流水号段');
 				return;
 			}
-			// if (idisCodes.length >= parseInt(goodsQuantity)) {
-			// 	uni.$u.toast('码量已超出购买数量');
-			// 	return;
-			// }
+			if (idisCodes.length >= parseInt(goodsQuantity)) {
+				uni.$u.toast('码量已超出购买数量');
+				return;
+			}
 			// 允许从相机和相册扫码 TODO
 			const that = this;
 			uni.scanCode({
@@ -107,6 +107,11 @@ export default which => ({
 					console.log('条码内容：' , res.result);
 					const {code}=getQuery(result);
 					console.log('-------handleClickScan-------',code);
+					const {idisCodes}=that;
+					if(idisCodes.includes(code)){
+						uni.$u.toast('码号已存在');
+						return;
+					}
 					if(code){
 						that.checkCode(code);
 					}
@@ -151,18 +156,39 @@ export default which => ({
 				const {
 					order
 				} = service;
-				order[`${which}Order`](params).then(res=>{
-					const {code}=res;
-					if(code===200){
-						const {id}=this.formData;
-						uni.$u.toast('操作成功');
-						 setTimeout(() => {
-						    uni.navigateBack({delta: 1});
-						 }, 500)
-					}
-				}).catch(e=>{
-					console.error(e);
-				});
+				uni.navigateBack({
+					delta: 1,
+					success: () => {
+					     let page = getCurrentPages().pop();  //跳转页面成功之后
+						 if (!page) {
+					          return;
+						 } else {
+							 console.log('----navigateBack----success--');
+					        page.onLoad({refresh:true});// page自带options对象.
+					     }
+				}});
+				// order[`${which}Order`](params).then(res=>{
+				// 	const {code}=res;
+				// 	if(code===200){
+				// 		const {id}=this.formData;
+				// 		uni.$u.toast('操作成功');
+				// 		 setTimeout(() => {
+				// 		    uni.navigateBack({
+				// 				delta: 1,
+				// 				success: () => {
+				// 					console.log('----navigateBack----success--');
+				// 				     let page = getCurrentPages().pop();  //跳转页面成功之后
+				// 					 if (!page) {
+				// 				          return;
+				// 					 } else {
+				// 				        page.onLoad(page.options);// page自带options对象.
+				// 				     }
+				// 				}});
+				// 		 }, 500)
+				// 	}
+				// }).catch(e=>{
+				// 	console.error(e);
+				// });
 
 			}).catch(e => {
 				console.error(e);
@@ -176,6 +202,10 @@ export default which => ({
 			const {
 				goodsQuantity
 			} = data;
+			if (idisCodes.length ===0) {
+				uni.$u.toast('码号不能为空');
+				return false;
+			}
 			if (idisCodes.length !== parseInt(goodsQuantity)) {
 				uni.$u.toast('购买数量与已扫码数量不一致');
 				return false;

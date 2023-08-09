@@ -7,7 +7,7 @@
 			</view>
 			<view class="form-item-content">
 				<fc-input :value="value" :isError="isError" v-if="type === 'input'" :placeholder="propsData.placeholder"
-					:maxlength="propsData.maxlength" :inputType="propsData.inputType" @change="handleChange" @focus="handleFocus"></fc-input>
+					:maxlength="propsData.maxlength" :inputType="propsData.inputType" @change="handleChange" @focus="handleFocus" :decimalLen='propsData.decimalLen'></fc-input>
 				<fc-select :value="value" :isError="isError" type="form" v-if="type === 'select'" :placeholder="propsData.placeholder"
 					:options="propsData.options" :rangeKey="propsData.rangeKey" @change="handleChange" @focus="clearValidate"></fc-select>
 				<fc-textarea :value="value" :isError="isError" v-if="type === 'textarea'" :placeholder="propsData.placeholder"

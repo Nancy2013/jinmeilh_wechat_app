@@ -7,7 +7,6 @@ const {base_url}=config
   * @return 格式化参数
   */
 export const formatData=({url,method,data,system='ecommerce'})=>{
-	console.log('-----utils-----',config);
 	const http=base_url[system]?base_url[system]:base_url;
 	return {
 		url:`${http}/${system}${url}`,

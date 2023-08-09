@@ -1,5 +1,5 @@
 <template>
-	<input :maxlength="maxlength" :value="innerValue" :class="['input', isError ? 'input-error' : '']" :type="inputType" :placeholder="placeholder" placeholder-class="input-placeholder" @input="handleInput" @focus="handleFocus">
+	<input :maxlength="maxlength" v-model="innerValue" :class="['input', isError ? 'input-error' : '']" :type="inputType" :placeholder="placeholder" placeholder-class="input-placeholder" @input="handleInput" @focus="handleFocus">
 </template>
 
 <script>
@@ -14,7 +14,7 @@
 				type: String
 			},
 			inputType: {
-				type: String,   // 'text' | 'passsword',
+				type: String,   // 'text' | 'number',
 				default: 'text'
 			},
 			maxlength: {
@@ -24,7 +24,11 @@
 			isError: {
 				type: Boolean,
 				default: false
-			}
+			},
+			decimalLen: {
+			    type: Number | String,
+			    default: 2
+			},
 		},
 		mounted() {
 			this.innerValue = this.value
@@ -41,7 +45,16 @@
 			    @return
 			*/
 			handleInput(event) {
-				this.$emit('change', event.target.value)
+				let value = event.target.value
+				if (this.inputType === 'number') {
+					value = filterNum(value)
+				}
+				if (this.inputType === 'float') {
+				    value = filterFloat(value, this.decimalLen)
+					console.log('-------handleInput------',this.inputType,value);
+				}
+				this.innerValue=value;
+				this.$emit('change', value)
 			},
 			/**
 			    输入框获取焦点事件

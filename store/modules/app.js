@@ -3,7 +3,7 @@ const app = {
     state: {
 		userInfo:{
 			name:'金美兰花',
-			accountType:2, // 企业主
+			accountType:4, // 企业主
 		},
 	},
 	getters: { },

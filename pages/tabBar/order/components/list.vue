@@ -29,12 +29,12 @@
 					<fc-picker placeholder="时间" type="search" mode="time" @change='handleTimeChange' :params='timeParams' :value='timeVal'/>
 				</view>
 			</view>
-			<view class='card'>
+			<view class='card' v-if='isEnterprise'>
 				<fc-tabs  type="card" :options="tabsOptions" :value="tabIndex" @change="handleTabChange"></fc-tabs>
 			</view>
 			<view class="panel" v-for="item in list" :key="item.id">
 				<fc-cell-group :border="false" :renderList="renderList('base',item)"></fc-cell-group>
-				<fc-detail class="border" title="详情信息" :renderList="renderList('detail',item)" @activeChange='(value)=>handleActiveChange(value,item.id)' v-if='!item.status'></fc-detail>
+				<fc-detail class="border" title="详情信息" :renderList="renderList('detail',item)" @activeChange='(value)=>handleActiveChange(value,item.id)'></fc-detail>
 			</view>
 		</view>
 	</view>
@@ -42,7 +42,7 @@
 
 <script>
 	import service from '@/service/index.js';
-	import {objAndProType} from '@/utils/dict.js'
+	import {orderTypes,objAndProType} from '@/utils/dict.js'
 	import Mix from '@/mixins';
 	import add_retail from '@/images/main/order/add_retail.png';
 	import add_group from '@/images/main/order/add_group.png';
@@ -70,7 +70,7 @@
 				tabIndex: 0,
 				search:{
 					productId:null,
-					orderType:1,
+					orderType:this.isEnterprise?orderTypes.online:orderTypes.retail, // 销售默认查询线下零售单
 					year:null,
 					month:null,
 				},
@@ -136,6 +136,19 @@
 			 */
 			handleTimeChange(value){
 				this.timeVal=value;
+			},
+			/**
+			    处理切换tab事件
+			    @param 
+			    @return
+			*/
+			handleTabChange(index) {
+				this.tabIndex = index
+				const {
+					value
+				} = this.tabsOptions[index];
+				this.$set(this.search, 'orderType', value);
+				this.initPagination();
 			},
 			/**
 			 * 查询品类

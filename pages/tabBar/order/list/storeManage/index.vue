@@ -4,15 +4,15 @@
 			<fc-tabs type="line" :options="tabsOptions" :value="tabIndex" @change="handleTabChange"></fc-tabs>
 		</view>
 		<view class="list-content">
-			<fc-list @scrolltolower='scrolltolower' :count="total" :page="pageNum" :limit='pageSize' :key='tabIndex'>
+			<fc-list @scrolltolower='scrolltolower' :count="total" :page="pageNum" :limit='pageSize' :key='tabIndex' :loaded='loading'>
 				<view class="panel" v-for="item in list" :key="item.id">
-					<fc-title title="线下零售单">
+					<fc-title title="线上零售单">
 						<view slot='right'>
-							<view class="send"  @click="goDetail(item.id)" v-if='item.status'>发货</view>
+							<view class="send"  @click="goDetail(item.id)" v-if='item.shipStatus'>发货</view>
 						</view>
 					</fc-title>
 					<fc-cell-group :border="false" :renderList="renderList('base',item)"></fc-cell-group>
-					<fc-detail title="详情信息" :renderList="renderList('detail',item)" @activeChange='(value)=>handleActiveChange(value,item.id)' v-if='!item.status'></fc-detail>
+					<fc-detail title="详情信息" :renderList="renderList('detail',item)" @activeChange='(value)=>handleActiveChange(value,item.id)' v-if='!item.shipStatus'></fc-detail>
 				</view>
 			</fc-list>
 		</view>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-	import {orderType,orderStatus} from '@/utils/dict.js'
+	import {orderTypes,orderStatus} from '@/utils/dict.js'
 	import Mix from '@/mixins';
 	const {
 		ListOrderCreaterMix
@@ -38,6 +38,7 @@
 				tabIndex: 0,
 				search:{
 					status:null,
+					orderType:orderTypes.online,
 				},
 			}
 		},
@@ -47,7 +48,23 @@
 			init(){
 				this.query();
 			},
-			
+			/**
+			    处理切换tab事件
+			    @param 
+			    @return
+			*/
+			handleTabChange(index) {
+				this.tabIndex = index
+				const {
+					value
+				} = this.tabsOptions[index];
+				this.$set(this.search, 'status', value);
+				this.initPagination();
+			},
+			/**
+			 * 发货
+			 * @param {Object} id 订单id
+			 */
 			goDetail(id){
 				uni.navigateTo({
 					url:`/pages/tabBar/order/add/index?id=${id}`

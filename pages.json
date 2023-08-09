@@ -3,27 +3,27 @@
 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-	 //    {
-		// 	"path": "pages/noLayouts/login/index",
-		// 	"style": {
-		// 		"navigationBarTitleText": "登录",
-		// 		"enablePullDownRefresh": false
-		// 	}
-		// },
-		// {
-		// 	"path": "pages/tabBar/home/index",
-		// 	"style": {
-		// 		"navigationBarTitleText": "首页",
-		// 		"enablePullDownRefresh": false
-		// 	}
-		// },
-		// {
-		// 	"path": "pages/tabBar/stock/index",
-		// 	"style": {
-		// 		"navigationBarTitleText": "库存",
-		// 		"enablePullDownRefresh": false
-		// 	}
-		// },
+	    {
+			"path": "pages/noLayouts/login/index",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tabBar/home/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/tabBar/stock/index",
+			"style": {
+				"navigationBarTitleText": "库存",
+				"enablePullDownRefresh": false
+			}
+		},
 		{
 			"path": "pages/tabBar/order/list/index", // 订单-列表
 			"style": {
@@ -64,18 +64,18 @@
 		"iconWidth": "22px",
 		"spacing": "5px",
 		"list": [
-			// {
-			// 	"pagePath": "pages/tabBar/home/index",
-			// 	"iconPath": "static/tabbar/home.png",
-			// 	"selectedIconPath": "static/tabbar/homeSelect.png",
-			// 	"text": "主页"
-			// },
-			// {
-			// 	"pagePath": "pages/tabBar/stock/index",
-			// 	"iconPath": "static/tabbar/stock.png",
-			// 	"selectedIconPath": "static/tabbar/stockSelect.png",
-			// 	"text": "库存"
-			// },
+			{
+				"pagePath": "pages/tabBar/home/index",
+				"iconPath": "static/tabbar/home.png",
+				"selectedIconPath": "static/tabbar/homeSelect.png",
+				"text": "主页"
+			},
+			{
+				"pagePath": "pages/tabBar/stock/index",
+				"iconPath": "static/tabbar/stock.png",
+				"selectedIconPath": "static/tabbar/stockSelect.png",
+				"text": "库存"
+			},
 			{
 				"pagePath": "pages/tabBar/order/list/index",
 				"iconPath": "static/tabbar/order.png",

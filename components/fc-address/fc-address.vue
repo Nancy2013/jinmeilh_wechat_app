@@ -35,7 +35,7 @@
 			</view>
 		</view>
 		<fc-textarea v-model="innerValue.address" :placeholder="placeholder" :isError="isError" :maxlength="maxlength" @change="handleTextareaChange" @focus="handleFocus"></fc-textarea>
-		<u-select v-model="isShow" mode="mutil-column-auto" :list="options" child-name="cities" label-name="name" :value-name="valueName" @confirm="handleConfirm" :default-value='defaultValue'></u-select>
+		<u-select v-model="isShow" mode="mutil-column-auto" :list="options" :child-name="childName" label-name="name" :value-name="valueName" @confirm="handleConfirm" :default-value='defaultValue'></u-select>
 	</view>
 </template>
 
@@ -60,6 +60,14 @@
 				type:String,
 				default:'id',
 			},
+			childName:{
+				type:String,
+				default:'childList'
+			},
+			level:{
+				type:Number,
+				default:3,
+			}
 		},
 		data() {
 			return {
@@ -97,7 +105,7 @@
 			defaultValue(){
 				// TODO优化
 				const defaultValue=[];
-				const {options}=this;
+				const {options,childName}=this;
 				if(this.value){
 					const {province,city,district}=this.value;
 					if(province){
@@ -105,12 +113,12 @@
 						if(provinceIndex>=0){
 							defaultValue.push(provinceIndex);
 							const province=options[provinceIndex];
-							const {cities}=province;
+							const cities=province[`${childName}`];
 							const cityIndex=cities&&cities.findIndex(item=>item.id===city.code);
 							if(cityIndex>=0){
 								defaultValue.push(cityIndex);
 								const city=cities[cityIndex];
-								const districtIndex=city.cities&&city.cities.findIndex(item=>item.id===city.code);
+								const districtIndex=city[`${childName}`]&&city[`${childName}`].findIndex(item=>item.id===city.code);
 								if(districtIndex){
 									defaultValue.push(cityIndex);
 								}
@@ -125,8 +133,13 @@
 		
 		mounted() {
 			this.innerValue = { ...this.value }
+			const {level}=this;
+			const params={
+				level,
+			};
 			requestApi({
-				url: "https://op.cn88555.com/api/node/geo/getAddressTree"
+				url: "https://op.cn88555.com/api/base/geo/area/list",
+				data:params,
 			}).then((res)=> {
 				if(Array.isArray(res.data)) {
 					this.options = res.data

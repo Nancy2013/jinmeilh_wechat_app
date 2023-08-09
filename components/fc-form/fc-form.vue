@@ -69,7 +69,9 @@
 						errorKeyList = []
 					for (let i = 0; i < this.renderList.length; i++) {
 						const renderItem = this.renderList[i]
-						PromiseList.push(this.$refs[`formItem-${renderItem.key}`][0].validate())
+						if(!renderItem.isHide){
+							PromiseList.push(this.$refs[`formItem-${renderItem.key}`][0].validate())
+						}
 					}
 					Promise.all(PromiseList).then(() => {
 						resolve(this.formData)

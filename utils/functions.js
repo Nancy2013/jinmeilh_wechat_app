@@ -1,5 +1,5 @@
 /**
- * 获取当前路由
+ * 获取当前路由参数
  */
 export function getCurPage(){
     let routes = getCurrentPages(); // 获取当前打开过的页面路由数组

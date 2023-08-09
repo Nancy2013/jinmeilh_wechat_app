@@ -2,7 +2,7 @@
 	<view class="addPage">
 		<view class="addOrder-wrap">
 			<fc-form ref="formRef" :renderList="renderFormList" :formData="formData" @change="handleChange" @unifyEvent="handleClickScan"></fc-form>
-			<scanResult :title="title" :list="idisCodes" @delete="handleDetele"></scanResult>
+			<scanResult :title="title" :list="idisCodes" @delete="handleDetele" required></scanResult>
 			<view class="addOrder-submit">
 				<button type="default" @click="handleSubmit">提交</button>
 			</view>
@@ -34,7 +34,6 @@
 			'formData.productId': function(newVal, oldVal) {
 				// 动态更新指导价
 				const current = this.brandList.filter(item=>item.value===newVal)[0];
-				console.log('-----formData.productId----',current);
 				if(current){
 					const goodsPrice = current.price;
 					this.$set(this.formData, 'goodsPrice', goodsPrice);
@@ -42,29 +41,14 @@
 				this.reset();
 			},
 			'formData.recordId': function(newVal, oldVal) {
-				// this.idisCodes = [];
+				this.idisCodes = [];
 				this.resetCode();
 			},
 			'formData.goodsQuantity': function(newVal, oldVal) {
 				this.resetCode();
 			},
 		},
-		computed: {
-			// codeList() {
-			// 	const {
-			// 		goodsQuantity,
-			// 		recordId
-			// 	} = this.formData;
-			// 	if (this.isGroup) {
-			// 		this.idisCodes = []; // 重置码
-			// 		if (parseInt(goodsQuantity)) {
-			// 			if (productId && recordId) {
-			// 				this.queryCode();
-			// 			}
-			// 		} 
-			// 	}
-			// },
-		},
+		computed: {},
 		mounted() {},
 		methods: {
 			/**
@@ -143,8 +127,8 @@
 			queryCode() {
 				const {goodsQuantity,recordId}=this.formData;
 				const params={
-					goodsQuantity:goodsQuantity?parseInt(goodsQuantity):0,
-					recordId,
+					count:goodsQuantity?parseInt(goodsQuantity):0,
+					segmentRecordId:recordId,
 				};
 				const {
 					queryCode
@@ -155,7 +139,7 @@
 						data
 					} = res;
 					if (code === 200) {
-						this.idisCodes = data.slice(0,5).map(item=>item.id);
+						this.idisCodes = data.map(item=>item.id);
 					}
 				}).catch(e => {
 					console.error(e);

@@ -23,5 +23,8 @@
 </script>
 
 <style lang="scss" scoped>
-.list{}
+.list{
+	margin-top: 20rpx;
+	background: #fff;
+}
 </style>

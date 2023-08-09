@@ -173,19 +173,6 @@ export default which => ({
 		this.init();
 	},
 	methods: {
-		/**
-		    处理切换tab事件
-		    @param 
-		    @return
-		*/
-		handleTabChange(index) {
-			this.tabIndex = index
-			const {
-				value
-			} = this.tabsOptions[index];
-			this.$set(this.search, 'orderType', value);
-			this.initPagination();
-		},
 
 		/**
 		 * @description: 初始化分页
@@ -277,42 +264,6 @@ export default which => ({
 				this.loading = false;
 			}).catch(e => {
 				this.loading = false;
-				console.error(e)
-			})
-		},
-
-		/**
-		 * 详情
-		 */
-		detail(id) {
-			// TODO 显示加载状态
-			const {
-				detailOrder
-			} = service.order;
-			const params = {
-				id,
-			}
-			detailOrder(params).then(res => {
-				const {
-					code,
-					data
-				} = res;
-				if (code === 200) {
-					const {
-						detailVOList
-					} = data;
-					const detailInfo = {
-						...data,
-						...detailVOList[0],
-					}
-					const pos = this.list.findIndex(item => item.id === id);
-					if (pos >= 0) {
-						const current = this.list[pos];
-						current.detailInfo = detailInfo;
-						this.$set(this.list, pos, current);
-					}
-				}
-			}).catch(e => {
 				console.error(e)
 			})
 		},

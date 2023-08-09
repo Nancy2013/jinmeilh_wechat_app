@@ -8,7 +8,7 @@ export default {
 	// 查询
 	queryOrder:(params)=>request(formatData({url:'/order/pageQueryForOffLine',method:'POST',data:params,})), // /order/pageQueryForOffLine
 	// 详情
-	detailOrder:(params)=>request(formatData({url:'/order/detail',method:'POST',data:params,})),
+	detailOrder:(params)=>request(formatData({url:'/order/detail',method:'',data:params,})),
 	// 编辑
 	editOrder:(params)=>request(formatData({url:'/order/edit',method:'POST',data:params,})),
 	// 新增
@@ -24,5 +24,5 @@ export default {
 	// 校验码
 	checkCode:(params)=>request(formatData({url:'/order/checkScanCode',method:'POST',data:params,})),
 	// 获取码量
-	queryCode:(params)=>request(formatData({url:'/geo/getAddressTree',method:'POST',data:params,})),
+	queryCode:(params)=>request(formatData({url:'/code/seg/listCodeByCount',method:'POST',data:params,system:'node'})),
 };
