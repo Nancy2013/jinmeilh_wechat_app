@@ -1,0 +1,23 @@
+{
+  "name": "jinmeilh_wechat_app",
+  "version": "1.0.0",
+  "description": "金美兰华前端微信小程序",
+  "main": "main.js",
+  "dependencies": {
+    "echarts": "^5.4.3",
+    "zrender": "^5.4.4",
+    "uview-ui": "^1.8.8",
+    "vuex-persistedstate": "^4.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://192.168.110.65:8081/fc-team-one/jinmeilh_wechat_app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
