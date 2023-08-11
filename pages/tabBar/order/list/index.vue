@@ -1,20 +1,26 @@
 <template>
 	<view class="listPage">
-		<Enterprise v-if="show(accountTypeDict.enterprise)"/>
-		<Sale v-if="show(accountTypeDict.sale)"/>
-		<StoreManage v-if="show(accountTypeDict.storeManage)"/>
+		<view>
+			<Enterprise v-if="show(roleFlagDict.enterprise)" ref='child'/>
+			<Sale v-if="show(roleFlagDict.sale)" ref='child'/>
+			<StoreManage v-if="show(roleFlagDict.storeManage)" ref='child'/>
+		</view>
+		<fc-tabbar />
 	</view>
 </template>
 
 <script>
-	import { mapState } from 'vuex';
+	import { mapState,mapMutations } from 'vuex';
 	import service from '@/service/index.js';
 	import Enterprise from './enterprise/index.vue';
 	import Sale from './sale/index.vue';
 	import StoreManage from './storeManage/index.vue';
-	import {accountTypeDict} from '@/utils/dict.js';
+	import {roleFlagDict} from '@/utils/dict.js';
+	import Mix from '@/mixins';
+	const { GetChildCreaterMix } = Mix;
 	export default {
 		name:'orderList',
+		mixins: [GetChildCreaterMix('page')],
 		components:{
 			Enterprise,
 			Sale,
@@ -22,30 +28,47 @@
 		},
 		data() {
 			return {
-				accountTypeDict,
+				roleFlagDict,
 			}
 		},
 		computed:{
 			...mapState('app', ['userInfo']),
 			show(){
 				return function(val){
-					const {accountType}=this.userInfo;
-					return accountType===val;
+					const {roleFlag}=this.userInfo;
+					return roleFlag===val;
 				}
 			},
 		},
 		mounted() {},
-		onLoad(option) {
-		    console.info('------onLoad------',option)
+		onLoad(options) {
+			console.log('--list---onLoad----',options);
+			this.update();
 		},
 		onShow(){
 			console.log('-----onShow----');
+			this.$nextTick(()=>{
+				this.init();
+			})
 		},
 		methods: {
-			refresh(){
-				console.log('----refresh----');
+			...mapMutations('app',['updateUserInfo']),
+			/**
+			 * 更新用户信息
+			 */
+			update(){
+				const roleFlag=uni.getStorageSync('roleFlag')||this.userInfo.roleFlag;
+				const userInfo={
+					...this.userInfo,
+					roleFlag:parseInt(roleFlag),
+				}
+				this.updateUserInfo({userInfo});
 			},
-		}
+		},
+		onReachBottom(){
+			console.log('---onReachBottom---');
+			this.getReachBottom();
+		},
 	}
 </script>
 

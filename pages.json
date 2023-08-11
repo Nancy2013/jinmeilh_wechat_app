@@ -54,40 +54,11 @@
 		"backgroundColor": "#fff"
 	},
 	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#7A7E83",
-		"borderStyle": "white",
-		"backgroundColor": "#EFF0F6",
-		"boxShadow": "0px -4px 12px 0px rgba(0, 0, 0, 0.15)",
-		"height": "50px",
-		"fontSize": "10px",
-		"iconWidth": "22px",
-		"spacing": "5px",
 		"list": [
-			{
-				"pagePath": "pages/tabBar/home/index",
-				"iconPath": "static/tabbar/home.png",
-				"selectedIconPath": "static/tabbar/homeSelect.png",
-				"text": "主页"
-			},
-			{
-				"pagePath": "pages/tabBar/stock/index",
-				"iconPath": "static/tabbar/stock.png",
-				"selectedIconPath": "static/tabbar/stockSelect.png",
-				"text": "库存"
-			},
-			{
-				"pagePath": "pages/tabBar/order/list/index",
-				"iconPath": "static/tabbar/order.png",
-				"selectedIconPath": "static/tabbar/orderSelect.png",
-				"text": "订单"
-			},
-			{
-				"pagePath": "pages/tabBar/mine/index",
-				"iconPath": "static/tabbar/mine.png",
-				"selectedIconPath": "static/tabbar/mineSelect.png",
-				"text": "我的"
-			}
+			{ "pagePath": "pages/tabBar/home/index" },
+			{ "pagePath": "pages/tabBar/stock/index" },
+			{ "pagePath": "pages/tabBar/order/list/index" },
+			{ "pagePath": "pages/tabBar/mine/index" }
 		]
 	},
 	"uniIdRouter": {}

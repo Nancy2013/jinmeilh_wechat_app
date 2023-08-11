@@ -7,6 +7,7 @@ import {
 	sendToJSON
 } from '@/pages/tabBar/order/add/config.js'
 import {getQuery} from '@/utils/functions.js'
+import { validPhone} from '@/utils/reg'
 const DEFAULT_PARAMS={ // 默认查询列表参数
 	pageNum:1,
 	pageSize:99999,
@@ -24,7 +25,12 @@ export default which => ({
 			formData: {
 				payType: payTypes.offline, // 线下支付
 				orderType: this.isGroup ? orderTypes.group : orderTypes.retail,
-				goodsPrice: 99,
+				goodsPrice: 0,
+				goodsQuantity:'',
+				numOfPlant:'',
+				payAmount:'',
+				receiveName:'',
+				receivePhone:'',
 			},
 			idisCodes: [],
 			indexList: [],
@@ -115,7 +121,13 @@ export default which => ({
 					if(code){
 						that.checkCode(code);
 					}
-				}
+				},
+				fail:function(res){
+					if(res){
+						const {errMsg=''}=res;
+						uni.$u.toast(errMsg);
+					}
+				},
 			});
 		},
 
@@ -156,39 +168,25 @@ export default which => ({
 				const {
 					order
 				} = service;
-				uni.navigateBack({
-					delta: 1,
-					success: () => {
-					     let page = getCurrentPages().pop();  //跳转页面成功之后
-						 if (!page) {
-					          return;
-						 } else {
-							 console.log('----navigateBack----success--');
-					        page.onLoad({refresh:true});// page自带options对象.
-					     }
-				}});
-				// order[`${which}Order`](params).then(res=>{
-				// 	const {code}=res;
-				// 	if(code===200){
-				// 		const {id}=this.formData;
-				// 		uni.$u.toast('操作成功');
-				// 		 setTimeout(() => {
-				// 		    uni.navigateBack({
-				// 				delta: 1,
-				// 				success: () => {
-				// 					console.log('----navigateBack----success--');
-				// 				     let page = getCurrentPages().pop();  //跳转页面成功之后
-				// 					 if (!page) {
-				// 				          return;
-				// 					 } else {
-				// 				        page.onLoad(page.options);// page自带options对象.
-				// 				     }
-				// 				}});
-				// 		 }, 500)
-				// 	}
-				// }).catch(e=>{
-				// 	console.error(e);
-				// });
+				uni.showLoading({
+					title: '加载中',
+					mask:true,
+				});
+				order[`${which}Order`](params).then(res=>{
+					const {code}=res;
+					if(code===200){
+						const {id}=this.formData;
+						uni.$u.toast('操作成功');
+						 setTimeout(() => {
+						    uni.navigateBack({
+								delta: 1,});
+						 }, 500)
+					}
+					uni.hideLoading()
+				}).catch(e=>{
+					uni.hideLoading()
+					console.error(e);
+				});
 
 			}).catch(e => {
 				console.error(e);
@@ -200,8 +198,13 @@ export default which => ({
 				idisCodes
 			} = this;
 			const {
-				goodsQuantity
+				goodsQuantity,
+				receivePhone
 			} = data;
+			if (!validPhone(receivePhone)) {
+				uni.$u.toast('请输入正确格式联系电话');
+				return false;
+			}
 			if (idisCodes.length ===0) {
 				uni.$u.toast('码号不能为空');
 				return false;
@@ -338,6 +341,10 @@ export default which => ({
 			const {
 				checkCode
 			} = service.order;
+			uni.showLoading({
+				title: '加载中',
+				mask:true,
+			});
 			checkCode(params).then(res => {
 				const {
 					code,
@@ -346,7 +353,9 @@ export default which => ({
 				if (code === 200) {
 					this.idisCodes.push(data);
 				}
+				uni.hideLoading()
 			}).catch(e => {
+				uni.hideLoading()
 				console.error(e)
 			});
 		},

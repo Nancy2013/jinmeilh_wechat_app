@@ -1,5 +1,5 @@
 import scanIcon from '@/images/main/order/scan.png'
-import { validPhone,validSpecialKey } from '@/utils/reg'
+import { validPhone} from '@/utils/reg'
 /**
 	获取新增订单表单渲染列表
 	@param {String} link 链接
@@ -68,13 +68,10 @@ export const getAddOrderFormRenderList = ()=> {
 			type: "input",
 			required: true,
 			propsData: {
-				placeholder: "请输入收货人名称"
+				placeholder: "请输入收货人名称",
+				maxlength: 30,
 			},
-			validFnc: (value)=>{
-				if(!validSpecialKey(value)){
-					return '买家姓名不能包含特殊字符';
-				}
-			},
+			validFnc: (value)=>{},
 		},
 		{
 			label: "联系电话",
@@ -83,7 +80,7 @@ export const getAddOrderFormRenderList = ()=> {
 			required: true,
 			propsData: {
 				placeholder: "请输入联系电话",
-				inputType: 'number',
+				inputType: 'text',
 				maxlength: 11,
 			},
 			validFnc: (value)=>{

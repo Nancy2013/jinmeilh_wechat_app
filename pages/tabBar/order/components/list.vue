@@ -25,16 +25,21 @@
 			<view class="operate">
 				<view class="title">历史订单</view>
 				<view class="right">
-					<fc-select placeholder="品种" type="search" :options='brandList' :value='search.productId' @change='handleCategoryChange'/>
-					<fc-picker placeholder="时间" type="search" mode="time" @change='handleTimeChange' :params='timeParams' :value='timeVal'/>
+					<fc-select placeholder="品种" type="search" :options='brandList' :value='search.productId' @change='handleCategoryChange' allowClear/>
+					<fc-picker placeholder="时间" type="search" mode="time" @change='handleTimeChange' :params='timeParams' :value='timeVal' allowClear/>
 				</view>
 			</view>
 			<view class='card' v-if='isEnterprise'>
 				<fc-tabs  type="card" :options="tabsOptions" :value="tabIndex" @change="handleTabChange"></fc-tabs>
 			</view>
-			<view class="panel" v-for="item in list" :key="item.id">
-				<fc-cell-group :border="false" :renderList="renderList('base',item)"></fc-cell-group>
-				<fc-detail class="border" title="详情信息" :renderList="renderList('detail',item)" @activeChange='(value)=>handleActiveChange(value,item.id)'></fc-detail>
+			<view class="list-content">
+				<fc-list @scrollLower='scrollLower' :count="total" :page="pageNum" :limit='pageSize' :key='tabIndex'
+					:loaded='loading' ref='listRef' type="page">
+					<view class="panel" v-for="item in list" :key="item.id">
+						<fc-cell-group :border="false" :renderList="renderList('base',item)"></fc-cell-group>
+						<fc-detail class="border" title="详情信息" :renderList="renderList('detail',item)" @activeChange='(value)=>handleActiveChange(value,item.id)'></fc-detail>
+					</view>
+				</fc-list>
 			</view>
 		</view>
 	</view>
@@ -74,12 +79,7 @@
 					year:null,
 					month:null,
 				},
-				brandList:[
-					{
-						label:'全部',
-						value:'-1',
-					}
-				],
+				brandList:[],
 				add_retail,
 				add_group,
 				bg_retail,
@@ -120,6 +120,7 @@
 			},
 			init(){
 				this.queryBrand();
+				this.initPagination();
 				this.query();
 			},
 			/**
@@ -169,16 +170,20 @@
 					} = res;
 					if (code === 200) {
 						const {brandList}=this;
-						this.brandList =brandList.concat(rows.map(item => ({
+						this.brandList =rows.map(item => ({
 							label: item.name,
 							value: item.id,
-						}))) ;
+						})) ;
 					}
 				}).catch(e => {
 					console.error(e);
 				})
 			},
-		}
+			getReachBottom(){
+				this.$refs.listRef.scrollLower();
+			},
+		},
+		
 	}
 </script>
 

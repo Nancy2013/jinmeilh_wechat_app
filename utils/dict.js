@@ -1,26 +1,22 @@
 /**
  * 账户类型
  */
-export const accountTypeDict = {
-	/**
-	 * 游客
-	 */
-	tourist: 1,
+export const roleFlagDict = {
 	/**
 	 * 企业主
 	 */
-	enterprise: 2,
+	enterprise: 0,
 	/**
 	 * 销售
 	 */
-	sale: 3,
+	sale: 1,
 	/**
 	 * 库管
 	 */
-	storeManage: 4,
-	2:'enterprise',
-	3:'sale',
-	4:'storeManage',
+	storeManage: 2,
+	0:'enterprise',
+	1:'sale',
+	2:'storeManage',
 }
 
 /**

@@ -1,99 +1,164 @@
 <template>
 	<view class="stock">
-		<fc-divider />
-		<fc-title title="出库记录" subTitle="剩余码量：234278"></fc-title>
-		<fc-cell-group :border="false" :renderList="renderList"></fc-cell-group>
-		<fc-detail title="详情信息" :renderList="renderList"></fc-detail>
-		<fc-cell-group :renderList="renderList"></fc-cell-group>
-		<fc-divider />
-		<view class="stock-divide"></view>
+		<view>
+			<fc-divider />
+			<fc-title title="出库记录" :subTitle="`剩余码量：${stockNum}`"></fc-title>
+			<view class="stock-orderArray" v-for="(item, index) in orderArray" :key="index">
+				<fc-cell-group :border="index != 0 ? true : false"
+					:renderList="getRenderList(item, renderKeys)"></fc-cell-group>
+				<fc-detail title="详情信息" :renderList="getRenderList(item.detailsVO[0], detailKeys)"
+					v-if="item.detailsVO.length"></fc-detail>
+			</view>
+			<fc-divider />
+		</view>
+		<fc-tabbar />
 	</view>
 </template>
 
 <script>
+	import requestApi from '@/utils/request.js';
 	export default {
 		name: "stock",
 		data() {
 			return {
-                renderList: [
-					{
-						key: 1,
-						label: '出库单类型',
-						value: '零售出库单'
+				stockNum: 0,
+				orderArray: [],
+				renderKeys: [{
+						key: 'orderType',
+						label: '出库单类型'
 					},
 					{
-						key: 2,
-						label: '出库单号',
-						value: '34438543980'
+						key: 'outOrderCode',
+						label: '出库单号'
 					},
 					{
-						key: 3,
-						label: '品种',
-						value: '佛缘系列'
+						key: 'amount',
+						label: '订单金额'
 					},
 					{
-						key: 4,
-						label: '指导价',
-						value: '19.00'
+						key: 'payAmount',
+						label: '实付金额'
 					},
 					{
-						key: 5,
-						label: '购买数量',
-						value: '118'
+						key: 'receiveName',
+						label: '收货人'
 					},
 					{
-						key: 6,
-						label: '订单金额',
-						value: '18888.00'
+						key: 'receivePhone',
+						label: '联系电话'
 					},
 					{
-						key: 7,
-						label: '株数',
-						value: '100'
+						key: 'receiveAddress',
+						label: '收货地址'
 					},
 					{
-						key: 8,
-						label: '实付金额',
-						value: '183988.00'
+						key: 'createdTime',
+						label: '出库时间'
 					},
 					{
-						key: 9,
-						label: '收货人',
-						value: '张云'
+						key: 'orderCode',
+						label: '关联订单'
+					}
+				],
+				detailKeys: [{
+						key: 'numOfPlant',
+						label: '株数'
 					},
 					{
-						key: 10,
-						label: '联系电话',
-						value: '1493782741'
+						key: 'productName',
+						label: '品种'
 					},
 					{
-						key: 11,
-						label: '收货地址',
-						value: '南京市江宁区南京南28路12-02'
+						key: 'price',
+						label: '指导价'
 					},
 					{
-						key: 12,
-						label: '出库时间',
-						value: '2027-07-19 10:00:00'
+						key: 'num',
+						label: '购买数量'
 					},
 					{
-						key: 13,
-						label: '关联订单',
-						value: '436728873466489'
+						key: 'goodsQuantity',
+						label: '数量'
+					},
+					{
+						key: 'goodsPrice',
+						label: '单价'
+					},
+					{
+						key: 'record',
+						label: '流水号范围'
+					},
+					{
+						key: 'templateName',
+						label: '产品模板'
+					},
+					{
+						key: 'batchName',
+						label: '绑定批次'
+					},
+					{
+						key: 'idisCodes',
+						label: '出库码信息'
 					}
 				]
 			}
 		},
+		created() {
+			this.interfaceStock();
+		},
 		methods: {
+			convertOrderType(type) {
+				let label = '';
+				switch (type) {
+					case 1:
+						label = '线上订单';
+						break;
+					case 2:
+						label = '团购订单';
+						break;
+					case 3:
+						label = '零售订单';
+						break;
+					default:
+						break;
+				}
+				return label;
+			},
+			getRenderList(enteries, keys) {
+				let renderList = keys.map(item => {
+					return {
+						key: item.key,
+						label: item.label,
+						value: Object.is(item.key, 'orderType') ? this.convertOrderType(enteries[item.key]) :
+							enteries[item.key],
+						isLayout: item.isLayout
+					}
+				})
+				return renderList;
+			},
 			/**
-			 * 
+			 * 接口调用
 			 */
+			interfaceStock() {
+				requestApi({
+					url: "https://xi.cn88555.com/api/ecommerce/order/pageQueryForOffLine",
+					method: "post",
+					data: {
+						roleFlag: 2,
+						pageNum: 1,
+						pageSize: 99999
+					}
+				}).then((res) => {
+					if (res.code == 200) {
+						this.stockNum = res.total;
+						this.orderArray = res.rows;
+					}
+				})
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.stock {
-		
-	}
+	.stock {}
 </style>

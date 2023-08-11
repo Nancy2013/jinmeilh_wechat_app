@@ -2,9 +2,11 @@
 	<view class="fc-picker">
 		<view :class="['select-' + type,  isError ? 'select-error' : '']" @click="handleShowPicker" >
 			<text :class="['select-text', innerText ? '' : 'select-text-placeholder']">{{ innerText ? innerText : placeholder}}</text>
-			<image v-if="type === 'form'" class="select-icon" :src="rightImg" mode=""></image>
-			<image v-else-if="type === 'search'" :class="['select-icon', isShow ? 'select-icon-show' : '']" :src="downImg" mode=""></image>
-			
+			<view class="">
+				<image v-if="allowClear&&innerText" class="select-icon close" :src="closeImg" mode="" @click.stop="clear"></image>
+				<image v-if="type === 'form'" class="select-icon" :src="rightImg" mode=""></image>
+				<image v-else-if="type === 'search'" :class="['select-icon', isShow ? 'select-icon-show' : '']" :src="downImg" mode=""></image>
+			</view>
 		</view>
 		<u-picker v-model="isShow" :mode="mode" :default-time="defaultTime" :params="params" @confirm="handleChange" @cancel="handleCancel"></u-picker>
 	</view>
@@ -15,6 +17,7 @@
 	import rightImg from '@/components/images/fc-select/right.png'
 	import downImg from '@/components/images/fc-select/down.png'
 	import { isEmpty } from '../../utils/common.js'
+	import closeImg from '@/components/images/scanResult/close.png'
 	export default {
 		name:"fc-picker",
 		props: {
@@ -52,13 +55,18 @@
 			params:{
 				type:Object,
 				default:()=>{},
-			}
+			},
+			allowClear: {
+				type: Boolean,
+				default: false
+			},
 		},
 		data() {
 			return {
 				isShow: false,
 				rightImg: rightImg,
-				downImg: downImg
+				downImg: downImg,
+				closeImg,
 			};
 		},
 		computed: {
@@ -118,7 +126,13 @@
 			handleShowPicker() {
 				this.isShow = true
 				this.$emit('focus')
-			}
+			},
+			/**
+			 * 清除
+			 */
+			clear(){
+				this.$emit('change',null)
+			},
 		}
 	}
 </script>
@@ -149,7 +163,7 @@
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-	width: 200rpx;
+	width: 250rpx;
 	height: 64rpx;
 	padding: 0 18rpx 0 24rpx;
 	border-radius: 4rpx;
@@ -162,6 +176,10 @@
 		width: 20rpx;
 		height: 23rpx;
 		transition: transform .15s;
+		&.close{
+			width: 23rpx;
+			margin:0 10rpx;
+		}
 	}
 	.select-icon-show {
 		transform: rotate(180deg);

@@ -1,11 +1,23 @@
 <template>
 	<view class="list">
-		<scroll-view scroll-y="true" lower-threshold="30" @scrolltolower="scrollLower">
-			<slot></slot>
-			<view class="loadmore" v-if='loaded'>
-				<u-loadmore :status="status" />
+		<view class="" v-if="count>0" style="height: 100%;">
+			<scroll-view scroll-y="true" lower-threshold="50" @scrolltolower="scrollLower" style="height: 100%;"
+				v-if="type==='scroll'">
+				<slot></slot>
+				<view class="loadmore" v-if="showLoadmore">
+					<u-loadmore :status="status" />
+				</view>
+			</scroll-view>
+			<view class="" v-else>
+				<slot></slot>
+				<view class="loadmore" v-if="showLoadmore">
+					<u-loadmore :status="status" />
+				</view>
 			</view>
-		</scroll-view>
+		</view>
+		<view class="empty" v-else>
+			<fc-empty></fc-empty>
+		</view>
 	</view>
 </template>
 
@@ -29,10 +41,15 @@
 				type: Boolean,
 				default: false
 			},
+			type: {
+				type: String,
+				default: 'scroll'  // scroll:使用scroll-view  page:使用page onReachBottom
+			},
 		},
 		components: {},
 		data() {
 			return {
+				showLoadmore: false,
 				status: 'loading', //加载样式：more-加载前样式，loading-加载中样式，nomore-没有数据样式
 			}
 		},
@@ -41,24 +58,37 @@
 		methods: {
 			scrollLower() {
 				console.log('------scrollLower-------')
-				const {page,limit,count}=this;
-				if (page*limit >= count) {
+				this.showLoadmore = true;
+				const {
+					page,
+					limit,
+					count
+				} = this;
+				if (page * limit >= count) {
 					this.status = "noMore"
 					return;
 				} else {
 					this.status = "loading"
 					this.$emit('scrollLower')
 				}
-				
-			}
+			},
+			/**
+			 * 重置状态
+			 */
+			reset() {
+				this.showLoadmore = false;
+				this.status = "loading";
+			},
 		},
 	}
 </script>
 
 <style lang="scss" scoped>
-	.list{
+	.list {
 		height: 100%;
-		overflow-y: auto;
-		.loadmore{}
+
+		.loadmore {
+			padding-bottom: 30rpx;
+		}
 	}
 </style>

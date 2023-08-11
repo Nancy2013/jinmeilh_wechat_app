@@ -1,13 +1,16 @@
 <template>
 	<view class="list">
-		<ListPage/>
+		<ListPage ref='child'/>
 	</view>
 </template>
 
 <script>
 	import ListPage from '../../components/list.vue'
+	import Mix from '@/mixins';
+	const { GetChildCreaterMix } = Mix;
 	export default {
 		name:'saleList',
+		mixins: [GetChildCreaterMix('list')],
 		components:{
 			ListPage,
 		},
@@ -18,7 +21,15 @@
 		},
 		computed:{},
 		mounted() {},
-		methods: {}
+		methods: {
+			init(){
+				const {child}=this.$refs
+				if(child){
+					const init=child.init;
+					init();
+				}
+			},
+		}
 	}
 </script>
 

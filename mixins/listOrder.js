@@ -3,82 +3,7 @@ import {
 	payTypes,
 	orderTypes
 } from '@/utils/dict.js'
-
-const tempList = [{
-		"id": 1,
-		"orderType": 3,
-		"orderCode": "4365748748394",
-		"amount": 18888.00,
-		"payAmount": 18888.00,
-		"receiveName": "张三",
-		"receivePhone": "13823234380",
-		"receiveAddress": "江苏省南京市江宁区南京南站",
-		"createdTime": "2023-7-12 10:10:54",
-		"outOrderCode": "43654765867867",
-		"detailsVO": [{
-			"id": 2,
-			"numOfPlant": 2,
-			"productName": "佛缘系列",
-			"price": 19.00,
-			"num": 188,
-			"orderId": 0,
-			"goodsId": 0,
-			"goodsQuantity": 0,
-			"goodsPrice": 0,
-			"productId": 0,
-			"templateId": 0,
-			"templateName": "佛缘系列",
-			"batchId": 0,
-			"batchName": "545465",
-			"recordId": 0,
-			"record": "35467658765",
-			"idisCodes": [
-				"00001",
-				"00002",
-				"00003",
-				"00004",
-			],
-		}],
-		status: 1,
-	},
-	{
-		"id": 2,
-		"orderType": 3,
-		"orderCode": "4365748748394",
-		"amount": 18888.00,
-		"payAmount": 18888.00,
-		"receiveName": "张三",
-		"receivePhone": "13823234380",
-		"receiveAddress": "江苏省南京市江宁区南京南站",
-		"createdTime": "2023-7-12 10:10:54",
-		"outOrderCode": "43654765867867",
-		"detailsVO": [{
-			"id": 2,
-			"numOfPlant": 2,
-			"productName": "佛缘系列",
-			"price": 19.00,
-			"num": 188,
-			"orderId": 0,
-			"goodsId": 0,
-			"goodsQuantity": 0,
-			"goodsPrice": 0,
-			"productId": 0,
-			"templateId": 0,
-			"templateName": "佛缘系列",
-			"batchId": 0,
-			"batchName": "545465",
-			"recordId": 0,
-			"record": "35467658765",
-			"idisCodes": [
-				"00001",
-				"00002",
-				"00003",
-				"00004",
-			],
-		}],
-		status: 0,
-	}
-];
+import { mapState } from 'vuex';
 export default which => ({
 	props: {},
 	data() {
@@ -168,10 +93,10 @@ export default which => ({
 			deep: true,
 		}
 	},
-	computed: {},
-	mounted() {
-		this.init();
+	computed: {
+		...mapState('app', ['userInfo']),
 	},
+	mounted() {},
 	methods: {
 
 		/**
@@ -180,6 +105,8 @@ export default which => ({
 		 */
 		initPagination() {
 			this.pageNum = 1;
+			this.list=[];
+			this.$refs.listRef.reset();
 		},
 
 		// 点击详情
@@ -220,20 +147,26 @@ export default which => ({
 		 * 查询
 		 */
 		query() {
+			const {roleFlag}=this.userInfo;
 			const {
 				queryOrder
 			} = service.order;
 			const {
 				pageNum,
 				pageSize,
-				search
+				search,
 			} = this;
 			const params = {
 				pageNum,
 				pageSize,
+				roleFlag:parseInt(roleFlag),
 				...search,
 			}
 			this.loading = true;
+			uni.showLoading({
+				title: '加载中',
+				mask:true,
+			});
 			queryOrder(params).then(res => {
 				const {
 					code,
@@ -262,8 +195,10 @@ export default which => ({
 					this.total = total;
 				}
 				this.loading = false;
+				uni.hideLoading()
 			}).catch(e => {
 				this.loading = false;
+				uni.hideLoading()
 				console.error(e)
 			})
 		},
@@ -273,7 +208,7 @@ export default which => ({
 		 * @param {*} 
 		 * @return {*}
 		 */
-		handleScrolltolower() {
+		scrollLower() {
 			this.pageNum++
 			this.query()
 		},

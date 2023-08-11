@@ -1,14 +1,12 @@
 const http = (config) => {
-	const header={Authorization:'24dbcfc8-9be9-469d-b99f-cd3001935b50'};
 	return new Promise((resolve, reject) => {
 		const options = {
 			url: config.url,
 			method: config.method || 'GET',
 			data: config.data || {},
-			header: {...header,...config.header} || header,
+			header: Object.assign({}, { Authorization: uni.getStorageSync('token') }, config.header) || {},
 			success: res => {
 				if (res.statusCode === 200) {
-					
 					if(res.data.code === 200) {
 						resolve(res.data)
 					} else {

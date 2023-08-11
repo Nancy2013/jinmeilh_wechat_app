@@ -1,8 +1,8 @@
 <template>
 	<view class="addPage">
-		<Enterprise v-if="show(accountTypeDict.enterprise)" :isGroup="isGroup==='true'"/>
-		<Sale v-if="show(accountTypeDict.sale)"/>
-		<StoreManage v-if="show(accountTypeDict.storeManage)" :isGroup="isGroup==='true'"/>
+		<Enterprise v-if="show(roleFlagDict.enterprise)" :isGroup="isGroup==='true'"/>
+		<Sale v-if="show(roleFlagDict.sale)"/>
+		<StoreManage v-if="show(roleFlagDict.storeManage)" :isGroup="isGroup==='true'"/>
 	</view>
 </template>
 
@@ -12,7 +12,7 @@
 	import Enterprise from './enterprise/index.vue';
 	import Sale from './sale/index.vue';
 	import StoreManage from './storeManage/index.vue';
-	import {accountTypeDict} from '@/utils/dict.js';
+	import {roleFlagDict} from '@/utils/dict.js';
 	export default {
 		name:'orderAdd',
 		components:{
@@ -22,7 +22,7 @@
 		},
 		data() {
 			return {
-				accountTypeDict,
+				roleFlagDict,
 				isGroup:'',
 			}
 		},
@@ -30,8 +30,8 @@
 			...mapState('app', ['userInfo']),
 			show(){
 				return function(val){
-					const {accountType}=this.userInfo;
-					return accountType===val;
+					const {roleFlag}=this.userInfo;
+					return roleFlag===val;
 				}
 			},
 		},
@@ -53,8 +53,8 @@
 					sale:'新增订单',
 					storeManage:'发货',
 				};
-				const {accountType}=this.userInfo;
-				const title=titleMap[accountTypeDict[accountType]];
+				const {roleFlag}=this.userInfo;
+				const title=titleMap[roleFlagDict[roleFlag]];
 				uni.setNavigationBarTitle({title});
 			},
 		}

@@ -66,7 +66,10 @@
 				const params = {
 					id:this.id,
 				}
-				this.loading=true;
+				uni.showLoading({
+					title: '加载中',
+					mask:true,
+				});
 				return detailOrder(params).then(res => {
 					const {
 						code,
@@ -80,12 +83,10 @@
 							...data,
 							detailId:id,
 						}
-						// this.idisCodes=idisCodes;
-
 					}
-					this.loading=false;
+					uni.hideLoading()
 				}).catch(e => {
-					this.loading=false;
+					uni.hideLoading()
 					console.error(e)
 				})
 			},
