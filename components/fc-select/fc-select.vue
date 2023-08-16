@@ -92,6 +92,9 @@
 					const {
 						getCurrent
 					} = this
+					if(this.mode == 'date') {
+						return  this.value || "";
+					}
 					return getCurrent ? getCurrent.label || "" : "";
 				}
 			},

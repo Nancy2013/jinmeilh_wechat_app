@@ -1,6 +1,6 @@
 <template>
-	<u-tabbar :list="tabbarList" @change="changeTab" :inactive-color="inactiveColor"
-		:active-color="activeColor"></u-tabbar>
+	<u-tabbar :list="tabbarList" @change="changeTab" :inactive-color="inactiveColor" :active-color="activeColor"
+		v-model="current" :before-switch="beforeSwitch"></u-tabbar>
 </template>
 
 <script>
@@ -18,8 +18,8 @@
 		},
 		data() {
 			return {
-				tabbarList: [
-					{
+				current: 1,
+				tabbarList: [{
 						pagePath: "/pages/tabBar/home/index",
 						iconPath: "/static/tabbar/home.png",
 						selectedIconPath: "/static/tabbar/homeSelect.png",
@@ -34,7 +34,7 @@
 						text: "库存"
 					},
 					{
-						pagePath: "/pages/tabBar/order/list/index",
+						pagePath: "/pages/tabBar/order/index",
 						iconPath: "/static/tabbar/order.png",
 						selectedIconPath: "/static/tabbar/orderSelect.png",
 						customIcon: false,
@@ -50,10 +50,29 @@
 				]
 			}
 		},
+		created() {
+			let cacheMenus = uni.getStorageSync('menus');
+			this.tabbarList = cacheMenus.map(item => {
+				let obj = {};
+				this.tabbarList.forEach(ele => {
+					let { pagePath, iconPath, selectedIconPath } = ele
+					if (ele.pagePath == item.url) obj = {
+						pagePath,
+						iconPath,
+						selectedIconPath,
+						customIcon: false,
+						text: item.name
+					}
+				})
+				return obj;
+			})
+		},
 		methods: {
 			changeTab(index) {
 				let url = this.tabbarList[index].pagePath;
-				uni.switchTab({ url });
+				uni.switchTab({
+					url
+				});
 			}
 		}
 	}

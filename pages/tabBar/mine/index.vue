@@ -1,15 +1,13 @@
 <template>
 	<view class="minePage">
-		<view>
-			<view class="content">
-				<view class="avatar">
-					<u-avatar :src="userInfo.avatar||avatar" size='164'></u-avatar>
-				</view>
-				<view class="text">{{userInfo.name||''}}</view>
+		<view class="content">
+			<view class="avatar">
+				<u-avatar :src="userInfo.avatar||avatar" size='164'></u-avatar>
 			</view>
-			<view class="footer">
-				<button type="default" @click="logout">退出登录</button>
-		    </view>
+			<view class="text">{{userInfo.name||''}}</view>
+		</view>
+		<view class="footer">
+			<button type="default" @click="logout">退出登录</button>
 		</view>
 		<fc-tabbar />
 	</view>
@@ -62,14 +60,13 @@
 
 <style lang="scss" scoped>
 	.minePage {
-		padding-top: 20rpx;
-		background-color: $background-color;
 		position: relative;
+		height: 100vh;
 		.content {
 			padding-top: 40rpx;
 			background: #fff;
 			text-align: center;
-            height: calc(100vh - 220rpx);
+			border-top:20rpx solid $background-color;
 			.text {
 				margin-top: 18rpx;
 				font-size: 32rpx;
@@ -81,10 +78,11 @@
 		.footer {
 			width: 100%;
 			position: absolute;
-			bottom: 0;
+			background-color: $background-color;
+			bottom: calc(constant(safe-area-inset-bottom) + 50px);
+			bottom: calc(env(safe-area-inset-bottom) + 50px); /* 兼容 iPhone X 及以上设备 */
 			padding: 32rpx;
 			background-color: $background-color;
-
 			button {
 				border-radius: 0;
 				border: none;

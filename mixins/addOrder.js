@@ -5,7 +5,7 @@ import {
 } from '@/utils/dict.js'
 import {
 	sendToJSON
-} from '@/pages/tabBar/order/add/config.js'
+} from '@/utils/config.js'
 import {getQuery} from '@/utils/functions.js'
 import { validPhone} from '@/utils/reg'
 const DEFAULT_PARAMS={ // 默认查询列表参数
@@ -111,7 +111,7 @@ export default which => ({
 					const {result}=res;
 					console.log('条码：' , res);
 					console.log('条码内容：' , res.result);
-					const {code}=getQuery(result);
+					const code=result.includes('http')?getQuery(result).code:result; // 兼容不同扫码结果
 					console.log('-------handleClickScan-------',code);
 					const {idisCodes}=that;
 					if(idisCodes.includes(code)){

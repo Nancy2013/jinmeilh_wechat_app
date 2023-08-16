@@ -6,9 +6,9 @@
 				<view class="home-title">售卖数量</view>
 				<view class="home-search">
 					<fc-select placeholder="品种" type="search" mode="selector" :options="options"
-						@change="(e) => selectChange(e, 'selector')" />
+						@change="(e) => selectChange(e, 'selector')" :value="productId" allowClear />
 					<fc-select placeholder="时间" type="search" mode="date" fields="month"
-						@change="(e) => selectChange(e, 'date')" />
+						@change="(e) => selectChange(e, 'date')" :value="date" />
 				</view>
 			</view>
 			<view class="home-cards">
@@ -42,12 +42,14 @@
 
 <script>
 	import requestApi from '@/utils/request.js'
-	import * as echarts from '@/uni_modules/lime-echart/static/echarts.min'
+	import { config } from '@/config.js'
+	import * as echarts from '@/uni_modules/lime-echart/static/echarts.min.js'
 	export default {
 		components: {},
 		data() {
 			return {
 				productId: '',
+				date: null,
 				year: '',
 				month: '',
 				options: [],
@@ -82,6 +84,8 @@
 			selectChange(e, mode) {
 				switch (mode) {
 					case 'date':
+					    console.log('date', e);
+					    this.date = e;
 						this.year = e.split('-')[0];
 						this.month = e.split('-')[1];
 						this.getAllInterface();
@@ -220,7 +224,7 @@
 			// 半年销量图
 			interfaceHalfYear(productId, year, month) {
 				requestApi({
-					url: "https://xi.cn88555.com/api/ecommerce/order/static/half/year",
+					url: config.base_url + '/ecommerce/order/static/half/year',
 					method: "GET",
 					data: {
 						productId,
@@ -234,7 +238,7 @@
 			// 半年销量图-销售人员
 			interfaceSalesYear(productId, year, month) {
 				requestApi({
-					url: "https://xi.cn88555.com/api/ecommerce/order/static/sales/half/year",
+					url: config.base_url + '/ecommerce/order/static/sales/half/year',
 					method: "GET",
 					data: {
 						productId,
@@ -248,7 +252,7 @@
 			// 售卖品种占比
 			interfaceProductRatio(year, month) {
 				requestApi({
-					url: "https://xi.cn88555.com/api/ecommerce/order/static/product/ratio",
+					url: config.base_url + '/ecommerce/order/static/product/ratio',
 					method: "GET",
 					data: {
 						year,
@@ -261,7 +265,7 @@
 			// 售卖品种占比-销售员
 			interfaceSalesRatio(year, month) {
 				requestApi({
-					url: "https://xi.cn88555.com/api/ecommerce/order/static/sales/product/ratio",
+					url: config.base_url + '/ecommerce/order/static/sales/product/ratio',
 					method: "GET",
 					data: {
 						year,
@@ -274,7 +278,7 @@
 			// 统计售卖数量 - 库管、企业主
 			interfaceSales(year, month) {
 				requestApi({
-					url: "https://xi.cn88555.com/api/ecommerce/order/static/sales",
+					url: config.base_url + '/ecommerce/order/static/sales',
 					method: "GET",
 					data: {
 						year,
@@ -289,7 +293,7 @@
 			// 统计售卖数量 - 销售
 			interfaceSalesPerson(productId, year, month) {
 				requestApi({
-					url: "https://xi.cn88555.com/api/ecommerce/order/static/sales/person",
+					url: config.base_url + '/ecommerce/order/static/sales/person',
 					method: "GET",
 					data: {
 						productId,
@@ -303,7 +307,7 @@
 			// 产品分页查询
 			interfaceProduct() {
 				requestApi({
-					url: "https://xi.cn88555.com/api/node/businessObject/pageQueryProduct",
+					url:  config.base_url + '/node/businessObject/pageQueryProduct',
 					method: "post",
 					data: {
 						pageSize: 100,

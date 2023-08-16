@@ -17,6 +17,11 @@
 
 <script>
 	import requestApi from '@/utils/request.js';
+	import { config } from '@/config.js'
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex';
 	export default {
 		name: "stock",
 		data() {
@@ -103,6 +108,9 @@
 				]
 			}
 		},
+		computed: {
+			...mapState('app', ['userInfo']),
+		},
 		created() {
 			this.interfaceStock();
 		},
@@ -141,10 +149,10 @@
 			 */
 			interfaceStock() {
 				requestApi({
-					url: "https://xi.cn88555.com/api/ecommerce/order/pageQueryForOffLine",
+					url: config.base_url + '/ecommerce/order/pageQueryForOffLine',
 					method: "post",
 					data: {
-						roleFlag: 2,
+						roleFlag: this.userInfo.roleFlag,
 						pageNum: 1,
 						pageSize: 99999
 					}

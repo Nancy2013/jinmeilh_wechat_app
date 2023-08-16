@@ -40,12 +40,14 @@ export default function(config) {
 			if(err.msg) {
 				uni.showToast({
 					title: err.msg,
-					icon: "none"
+					icon: "none",
+					duration:5000,
 				})
 			} else {
 				uni.showToast({
 					title: `网络请求失败${err.errMsg ? '('+err.errMsg+')' : '' }`,
-					icon: "none"
+					icon: "none",
+					duration:5000,
 				})
 			}
 		} 

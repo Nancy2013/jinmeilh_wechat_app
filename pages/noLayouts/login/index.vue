@@ -11,11 +11,11 @@
 			</view>
 			<view class="login-form-input">
 				<img class="form-input-static" :src="passwordImg" />
-				<input placeholder="请输入账号密码" :type="type" v-model="password" />
-				<img v-if="type == 'text'" :class="['form-input-absolute', 'input-img-visible']" :src="visibleImg"
-					@click="changeType" />
-				<img v-if="type == 'password'" :class="['form-input-absolute', 'input-img-noVisible']"
-					:src="noVisibleImg" @click="changeType" />
+				<input placeholder="请输入账号密码" v-model="password" :password="openPassword" />
+				<img v-if="openPassword" :class="['form-input-absolute', 'input-img-noVisible']" :src="noVisibleImg"
+					@click="changeOpenPassword" />
+				<img v-else :class="['form-input-absolute', 'input-img-visible']" :src="visibleImg"
+					@click="changeOpenPassword" />
 			</view>
 		</view>
 		<view class="login-btn">
@@ -32,7 +32,13 @@
 	import passwordImg from '@/static/noLayouts/login/password.png';
 	import accountImg from '@/static/noLayouts/login/account.png';
 	import requestApi from '@/utils/request.js';
-	import { mapState,mapMutations } from 'vuex';
+	import {
+		config
+	} from '@/config.js'
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex';
 	export default {
 		data() {
 			return {
@@ -40,26 +46,23 @@
 				noVisibleImg,
 				passwordImg,
 				accountImg,
+				openPassword: true,
 				type: 'text',
 				userName: '',
 				password: ''
 			}
 		},
-		computed:{
+		computed: {
 			...mapState('app', ['userInfo']),
 		},
 		methods: {
-			...mapMutations('app',['updateUserInfo']),
-			changeType() {
-				if (this.type == 'text') {
-					this.type = 'password'
-				} else {
-					this.type = 'text'
-				}
+			...mapMutations('app', ['updateUserInfo']),
+			changeOpenPassword() {
+				this.openPassword = !this.openPassword;
 			},
-			convertPage() {
+			convertPage(url) {
 				uni.switchTab({
-					url: '/pages/tabBar/home/index'
+					url
 				})
 			},
 			interfaceLogin() {
@@ -68,34 +71,46 @@
 					password
 				} = this;
 				requestApi({
-					url: "https://xi.cn88555.com/api/base/login",
+					url: config.base_url + '/base/login',
 					method: 'post',
 					data: {
 						userName,
 						password
 					}
 				}).then((res) => {
-					if(res.code == 200) {
-						const {name,avatar}=res.data; // 存储登录名与头像
-						const userInfo={
+					if (res.code == 200) {
+						const {
+							name,
+							avatar
+						} = res.data; // 存储登录名与头像
+						const userInfo = {
 							...this.userInfo,
 							name,
 							avatar,
 						};
-						this.interfaceMenus(res.data.token);
-						this.updateUserInfo({userInfo});
+						this.interfaceMenus(res.data.token, userInfo);
 						uni.setStorageSync('token', res.data.token);
-						this.convertPage();
 					}
 				})
 			},
-			interfaceMenus(Authorization) {
+			interfaceMenus(Authorization, userInfo) {
 				requestApi({
-					url: "https://xi.cn88555.com/api/base/menu/current/user/menu",
+					url: config.base_url + '/base/menu/current/user/menu',
 					method: 'get',
-					header: { Authorization, App_id: 3 }
+					header: {
+						Authorization,
+						App_id: 4
+					}
 				}).then((res) => {
-					console.log('路由数据', res);
+					let menus = res.data.filter(v => v.parentId != 0);
+					let roleFlag = res.data.find(v => v.parentId == 0).url.split('=')[1];
+					this.updateUserInfo({
+						userInfo: Object.assign({}, userInfo, {
+							roleFlag: Number(roleFlag)
+						})
+					});
+					uni.setStorageSync('menus', menus);
+					this.convertPage(menus[0].url);
 				})
 			}
 		}
@@ -144,7 +159,8 @@
 			}
 
 			>input {
-				margin: 0 20rpx;
+				margin: 0 100rpx 0 20rpx;
+				width: 100%;
 			}
 
 			.form-input-absolute {

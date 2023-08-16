@@ -30,5 +30,5 @@ export const getQuery = (urlStr) => {
 			return result
 		}
 		
-		return null;
+		return {};
 }
