@@ -1,6 +1,8 @@
 <template>
-	<u-tabbar :list="tabbarList" @change="changeTab" :inactive-color="inactiveColor" :active-color="activeColor"
-		v-model="current" :before-switch="beforeSwitch"></u-tabbar>
+	<div class="fc-tabbar">
+		<u-tabbar class="fc-tabbar" height="148rpx" :list="tabbarList" @change="changeTab" :inactive-color="inactiveColor" :active-color="activeColor"
+			v-model="current" :before-switch="beforeSwitch"></u-tabbar>
+	</div>
 </template>
 
 <script>
@@ -77,3 +79,11 @@
 		}
 	}
 </script>
+
+<style scoped lang="scss">
+	.fc-tabbar {
+		position: absolute;
+		left: -999999px;
+	}
+	
+</style>

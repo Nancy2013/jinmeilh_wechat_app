@@ -74,6 +74,7 @@
 
 <style lang="scss" scoped>
 .listPage{
+	padding-bottom: 148rpx;
 	padding-top:1rpx;
 	background-color: $background-color;
 }

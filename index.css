@@ -4,6 +4,33 @@ textarea {
 	box-sizing: border-box;
 }
 
+view,
+input,
+textarea,text,button {
+	font-size: 32rpx;
+}
+
+.fc-tabbar .u-tabbar__content__item__button {
+	position: static !important;
+	transform: translate(0) !important;
+}
+
+.fc-tabbar .u-tabbar__content__item__button image {
+	width: 48rpx;
+	height: 48rpx;
+	margin-bottom: 1px;
+}
+
+.fc-tabbar .u-tabbar__content__item__text {
+	position: static !important;
+	transform: translate(0) !important;
+}
+
+.fc-tabbar .u-tabbar__content__item__text text {
+	font-size: 24rpx;
+}
+
+
 .text_ellipsis {
 	overflow: hidden;
 	white-space: nowrap;

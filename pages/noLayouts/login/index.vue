@@ -7,11 +7,11 @@
 		<view class="login-form">
 			<view class="login-form-input">
 				<img class="form-input-static" :src="accountImg" />
-				<input placeholder="请输入账号名称" type="text" v-model="userName" />
+				<input placeholder="请输入账号名称" type="text" v-model="userName" maxlength="11" />
 			</view>
 			<view class="login-form-input">
 				<img class="form-input-static" :src="passwordImg" />
-				<input placeholder="请输入账号密码" v-model="password" :password="openPassword" />
+				<input placeholder="请输入账号密码" v-model="password" :password="openPassword" maxlength="16" />
 				<img v-if="openPassword" :class="['form-input-absolute', 'input-img-noVisible']" :src="noVisibleImg"
 					@click="changeOpenPassword" />
 				<img v-else :class="['form-input-absolute', 'input-img-visible']" :src="visibleImg"
@@ -35,10 +35,7 @@
 	import {
 		config
 	} from '@/config.js'
-	import {
-		mapState,
-		mapMutations
-	} from 'vuex';
+	import { mapState, mapMutations } from 'vuex';
 	export default {
 		data() {
 			return {
@@ -139,11 +136,11 @@
 	}
 
 	.login-form {
-		margin: 80rpx 40rpx;
+		margin: 80rpx 64rpx;
 
 		&-input {
 			height: 100rpx;
-			background: #FFFFFF;
+			
 			border-radius: 100rpx;
 			opacity: 1;
 			border: 2rpx solid #C7D1DB;
@@ -151,6 +148,7 @@
 			display: flex;
 			align-items: center;
 			position: relative;
+			background: #FFFFFF;
 
 			.form-input-static {
 				width: 40rpx;
@@ -159,22 +157,21 @@
 			}
 
 			>input {
-				margin: 0 100rpx 0 20rpx;
-				width: 100%;
+				padding: 0 32rpx 0 20rpx;
+				flex: 1;
+				font-size: 24rpx;
 			}
 
 			.form-input-absolute {
+				z-index: 9;
 				position: absolute;
 				right: 40rpx;
-				width: 50rpx;
+				width: 48rpx;
 			}
 
-			.input-img-visible {
-				height: 30rpx;
-			}
-
-			.input-img-noVisible {
-				height: 40rpx;
+			.input-img-visible, .input-img-noVisible {
+				width: 48rpx;
+				height: 48rpx;
 			}
 		}
 	}

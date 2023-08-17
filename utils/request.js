@@ -10,6 +10,12 @@ const http = (config) => {
 					if(res.data.code === 200) {
 						resolve(res.data)
 					} else {
+						if(res.data.code === 2001) {
+							uni.clearStorage();
+							uni.redirectTo({
+								url: `/pages/noLayouts/login/index`
+							})
+						}
 						reject(res.data)
 					}
 				} else {

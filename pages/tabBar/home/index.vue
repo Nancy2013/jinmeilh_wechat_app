@@ -21,7 +21,7 @@
 			<view class="home-margin home-echarts">
 				<view class="home-title">售卖品种对比</view>
 				<view class="home-echarts-init">
-					<l-echart ref="pieChart" @finished="interfaceProductRatio(year, month)"></l-echart>
+					<l-echart ref="pieChart"></l-echart>
 				</view>
 			</view>
 			<fc-divider />
@@ -31,7 +31,7 @@
 					<view class="home-title-sub">(单位: 盆)</view>
 				</view>
 				<view class="home-echarts-init">
-					<l-echart ref="linearChart" @finished="interfaceHalfYear(productId, year, month)"></l-echart>
+					<l-echart ref="linearChart"></l-echart>
 				</view>
 			</view>
 			<fc-divider />
@@ -42,6 +42,7 @@
 
 <script>
 	import requestApi from '@/utils/request.js'
+	import { mapState } from 'vuex';
 	import { config } from '@/config.js'
 	import * as echarts from '@/uni_modules/lime-echart/static/echarts.min.js'
 	export default {
@@ -76,15 +77,18 @@
 				]
 			}
 		},
+		computed: {
+			...mapState('app', ['userInfo']),
+		},
 		created() {
 			this.interfaceProduct();
 			this.getAllInterface();
 		},
+		
 		methods: {
 			selectChange(e, mode) {
 				switch (mode) {
 					case 'date':
-					    console.log('date', e);
 					    this.date = e;
 						this.year = e.split('-')[0];
 						this.month = e.split('-')[1];
@@ -110,7 +114,7 @@
 						itemHeight: 10,
 						itemWidth: 10,
 						itemGap: 18,
-						left: 10,
+						left: 0,
 						padding: 5,
 						icon: 'circle',
 						formatter: (name) => {
@@ -130,8 +134,8 @@
 					series: [{
 						name: '售卖品种对比',
 						type: 'pie',
-						radius: ['40%', '90%'],
-						center: ['65%', '50%'],
+						radius: ['30%', '80%'],
+						center: ['70%', '50%'],
 						roseType: 'radius',
 						avoidLabelOverlap: true,
 						label: {
@@ -209,14 +213,23 @@
 				let {
 					productId,
 					year,
-					month
+					month,
+					userInfo:{roleFlag}
 				} = this
-				this.interfaceHalfYear(productId, year, month);
-				this.interfaceSalesYear(productId, year, month);
-				this.interfaceProductRatio(year, month);
-				this.interfaceSalesRatio(year, month);
-				this.interfaceSales(year, month);
-				this.interfaceSalesPerson(productId, year, month);
+				console.log(roleFlag)
+				switch(roleFlag) {
+					case 1: 
+						this.interfaceSalesYear(productId, year, month);
+						this.interfaceSalesRatio(year, month);
+						this.interfaceSalesPerson(productId, year, month);
+						break
+					case 0:
+					case 2:
+						this.interfaceHalfYear(productId, year, month);
+						this.interfaceProductRatio(year, month);
+						this.interfaceSales(year, month);
+						break
+				}
 			},
 			/**
 			 * 接口调用
@@ -246,7 +259,7 @@
 						month
 					}
 				}).then((res) => {
-					console.log('半年销量图-销售人员', res)
+					this.linearInit(res.data.map(item => item.quantity))
 				})
 			},
 			// 售卖品种占比
@@ -272,7 +285,7 @@
 						month
 					}
 				}).then((res) => {
-					console.log('售卖品种占比-销售员', res)
+					this.pieInit(res.data)
 				})
 			},
 			// 统计售卖数量 - 库管、企业主
@@ -301,7 +314,9 @@
 						month
 					}
 				}).then((res) => {
-					console.og('统计售卖数量 - 销售', res)
+					this.cardsArr = this.cardsArr.map(item => Object.assign({}, item, {
+						count: res.data[item.key] ? res.data[item.key] : 0
+					}))
 				})
 			},
 			// 产品分页查询
@@ -326,7 +341,9 @@
 </script>
 
 <style lang="scss" scoped>
-	.home {}
+	.home {
+		padding-bottom: 148rpx;
+	}
 
 	.home-flex {
 		display: flex;

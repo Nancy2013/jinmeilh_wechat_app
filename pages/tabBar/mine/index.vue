@@ -46,7 +46,7 @@
 					if (code === 200) {
 						uni.clearStorage();
 						uni.$u.toast('已退出登录');
-						uni.redirectTo({
+						uni.reLaunch({
 							url: `/pages/noLayouts/login/index`
 						})
 					}
@@ -78,9 +78,8 @@
 		.footer {
 			width: 100%;
 			position: absolute;
-			background-color: $background-color;
-			bottom: calc(constant(safe-area-inset-bottom) + 50px);
-			bottom: calc(env(safe-area-inset-bottom) + 50px); /* 兼容 iPhone X 及以上设备 */
+			bottom: calc(constant(safe-area-inset-bottom) + 148rpx);
+			bottom: calc(env(safe-area-inset-bottom) + 148rpx); /* 兼容 iPhone X 及以上设备 */
 			padding: 32rpx;
 			background-color: $background-color;
 			button {

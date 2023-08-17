@@ -168,5 +168,7 @@
 </script>
 
 <style lang="scss" scoped>
-	.stock {}
+	.stock {
+		padding-bottom: 148rpx;
+	}
 </style>

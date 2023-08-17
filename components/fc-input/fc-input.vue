@@ -49,7 +49,7 @@
 				if (this.inputType === 'number') {
 					value = filterNum(value)
 				}
-				if (this.inputType === 'digit') {
+				if (this.inputType === 'float') {
 				    value = filterFloat(value, this.decimalLen)
 					console.log('-------handleInput------',this.inputType,value);
 				}
